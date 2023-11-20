@@ -7,9 +7,8 @@ def startConnection():
     return db_connection
 
 
-def handle_database(message: str, step: int):
-    global cursor
-    if (step == 1):
+def handle_database(message: str, step: int, cursor):
+    if (step == 0):
         # On exécutera les requetes en fonction du step
         # cursor.execute("""SELECT * FROM ucs;""")
         # result = cursor.fetchall()
@@ -17,3 +16,4 @@ def handle_database(message: str, step: int):
         # si jamais on a un soucis ex = pas de ligne trouvé alors => return False
         return
     return
+

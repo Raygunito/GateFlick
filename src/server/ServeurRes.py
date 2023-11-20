@@ -32,7 +32,7 @@ def decodeMessage(message: str, step: int) -> str:
     # J'ai eu droit a la spéciale Java avec les caractères spéciaux cachés
     clean_message = cleanMessage(message)
     if re.search(step_patterns[step], clean_message):
-        Database.handle_database(clean_message, step)
+        Database.handle_database(clean_message, step,cursor)
         return step_responses[step]
     else:
         return "REJECT Not found"
