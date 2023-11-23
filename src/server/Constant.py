@@ -1,6 +1,7 @@
 DEFAULT_PORT = 1234
 DEFAULT_HOST = "localhost"
 MAX_MESSAGE = int(500)
+RECV_BUFFER_SIZE = int(1024)
 STEP_PATTERNS = [
     r'^Com\d{9}$',
     r'^Portique\d{4}$',
