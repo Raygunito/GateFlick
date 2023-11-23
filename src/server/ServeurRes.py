@@ -1,5 +1,6 @@
 import socket
 import re
+from typing import Tuple
 import Logger
 import Database
 import Constant
@@ -14,24 +15,35 @@ log = Logger.startLogger("MainServer")
 
 
 # Réponse qui sera basé sur le schéma applicatif du rapport
-def decodeMessage(message: str, step: int) -> str:
+def decodeMessage(message: str, step: int, array : list) -> str:
     # J'ai eu droit a la spéciale Java avec les caractères spéciaux cachés
     clean_message = Utility.cleanMessage(message)
-
+    #Pré traitement de l'information, refuser tous les messages qui ne suivent pas le regex
     if re.search(Constant.STEP_PATTERNS[step], clean_message):
-        Database.handle_database(clean_message, step, cursor)
+        requestResponse = Database.handle_database(clean_message, step, cursor, array)
+        if not requestResponse:
+            return Constant.STEP_FAILURES[step]
+             
         return Constant.STEP_RESPONSES[step]
     else:
         return Constant.STEP_FAILURES[step]
 
 
-def handle_client(client_socket, client_address):
+def handle_client(client_socket: socket.socket, client_address: Tuple[str, int]) -> None:
+    """
+    Handle communication with a client.
+
+    Parameters:
+    - client_socket: The socket object for communication with the client.
+    - client_address: A tuple containing the IP address and port number of the client.
+    """
     client_socket.settimeout(60)
     kickTimeOut = False
     step = 0
+    array_string = [None,None]
     try:
         while True:
-            data = client_socket.recv(1024).strip()
+            data = client_socket.recv(Constant.RECV_BUFFER_SIZE).strip()
             if (not data):
                 break
             if int(len(data)) > Constant.MAX_MESSAGE:
@@ -46,8 +58,9 @@ def handle_client(client_socket, client_address):
                 client_socket.close()
                 return
             log.debug(f"Received data from client: {Utility.cleanMessage(request)}")
-            # Processus de decodage et de préparation SQL
-            response = decodeMessage(request, step)
+            # Processus et préparation SQL
+            # Communication avec la base donnée très important comme ligne
+            response = decodeMessage(request, step, array_string)
 
             if (response == Constant.STEP_RESPONSES[step]):
                 step += 1
@@ -55,22 +68,41 @@ def handle_client(client_socket, client_address):
                 response = response + "- Resetting to Step 1"
                 step = 0
             response = response + "\n"
-            client_socket.send(response.encode('utf-8'))
+
+            try:
+                client_socket.send(response.encode('utf-8'))
+            except socket.error as e:
+                log.error(f"Error sending data to {client_address}: {e}")
+                break
+
             # Si jamais on arrrive a la fin de l'échange
             if (Utility.cleanMessage(response) == Constant.STEP_RESPONSES[3]):
                 break
     except socket.timeout:
         log.warning(f"Timeout for {client_address}. Closing the connection.")
         timeout_message = "TIMEOUT Connection closed due to timeout."
-        client_socket.send(timeout_message.encode('utf-8'))
+        try:
+            client_socket.send(timeout_message.encode('utf-8'))
+        except socket.error as e:
+            log.error(f"Error sending timeout message to {client_address}: {e}")
+
         kickTimeOut = True
 
+        if ((array_string[0]!=None) and (array_string[1]!=None)):
+            print("Je vais changer le ticket car Timeout")
+            decodeMessage('',step,array_string)
+            
+    except (socket.error, ConnectionResetError) as e:
+        log.error(f"Socket error for {client_address}: {e}")
     finally:
         if kickTimeOut:
             log.info(f"{client_address} has disconnected due to timeout.")
         else:
             log.info(f"{client_address} has disconnected.")
-        client_socket.close()
+        try:
+            client_socket.close()
+        except socket.error as e:
+            log.error(f"Error closing socket for {client_address}: {e}")
 
 
 success = False
