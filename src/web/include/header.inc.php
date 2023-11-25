@@ -21,7 +21,7 @@
         ?>
 
         <div class="buttons | flex-group">
-            <form method="get">
+            <form method="get" class="flex-group">
                 <input type="text" id="search" name="search" placeholder="Entrez le nom du film" required />
                 <button class="buttons__search | icon" type="submit"></button>
             </form>

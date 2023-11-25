@@ -39,6 +39,8 @@ require '../include/header.inc.php';
         </form>
     </div>
 </main>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="../scripts/inscription.js"></script>
 </body>
 <?php require '../include/footer.inc.php'; ?>
 

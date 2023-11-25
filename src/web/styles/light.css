@@ -270,6 +270,8 @@ header> :is(:first-child, :last-child) {
 
 .buttons__search {
     background: url('../img/search_button.svg') center/cover no-repeat;
+    padding: 0;
+    margin: 0;
 }
 
 .buttons__account {
@@ -502,16 +504,13 @@ main {
     min-height: 50%;
 }
 
-input,
-button {
-    margin: 2% 0;
+input {
     border: 1px solid white;
 }
 
 button,
 input {
     width: max-content;
-    padding: 2%;
     border-radius: 10px;
 }
 
