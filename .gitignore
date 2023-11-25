@@ -3,3 +3,4 @@ db_login.json
 src/server/__pycache__/*
 .vscode/*
 *.log
+**/.DS_Store
