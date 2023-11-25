@@ -1,0 +1,32 @@
+@import url(header.css);
+section {
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    p {
+        font-size: 0.9em;
+    }
+
+    li {
+        font-size: 0.9em;
+    }
+}

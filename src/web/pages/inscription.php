@@ -4,8 +4,7 @@ require '../db/db_connection.php';
 $kw = 'gate flick, films, tmdb';
 $desc = 'Inscription page du site Gate Flick';
 $title = 'Inscription | Gate Flick';
-$css = '../styles/light.css';
-
+$filePath = '../';
 require '../include/header.inc.php';
 
 function generateId($role)

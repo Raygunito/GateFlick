@@ -1,0 +1,20 @@
+:root {
+    --primary-color: #f2dad2;
+    --title-color: #C65835;
+    --background-color: #0D0D0D;
+    --text-color: #F3F9F9;
+}
+
+* {
+    font-family: 'Montserrat', sans-serif, serif;
+    scroll-behavior: smooth;
+    color: var(--text-color);
+}
+
+body {
+    background-color: #2d3436;
+    background: linear-gradient(350deg, #2d3436 0%, #0D0D0D 60%) no-repeat center center fixed;
+    margin: 0;
+    margin-bottom: 0;
+
+}

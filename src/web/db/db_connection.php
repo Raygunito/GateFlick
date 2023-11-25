@@ -1,9 +1,14 @@
 <?php
-$host = '';
-$port = '';
-$dbname = '';
-$user = '';
-$password = '';
+
+$configFile = '../db_login.json';
+$configData = file_get_contents($configFile);
+$config = json_decode($configData, true);
+ 
+$host = $config['host'];
+$port = $config['port'];
+$dbname =$config['database']; 
+$user =$config['user']; 
+$password =$config['password'];
 
 try {
     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password);
