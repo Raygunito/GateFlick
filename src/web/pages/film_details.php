@@ -7,12 +7,10 @@ $title = 'Détails du Cinéma | Gate Flick';
 $filePath = "../";
 require '../include/header.inc.php';
 
-// Récupérer l'ID du film depuis la requête GET
 if (isset($_GET['id_film'])) {
     $filmId = $_GET['id_film'];
 
     try {
-        // Requête pour récupérer les détails du film
         $filmSql = "SELECT * FROM film WHERE id_film = :filmId";
         $filmStmt = $pdo->prepare($filmSql);
         $filmStmt->bindParam(':filmId', $filmId);
@@ -28,6 +26,7 @@ if (isset($_GET['id_film'])) {
             echo '<p>Durée : ' . $filmDetails['duree'] . '</p>';
             echo '<p>Metteur en scène : ' . $filmDetails['metteur_en_scene'] . '</p>';
             echo '<p>Date de sortie : ' . $filmDetails['date_sortie'] . '</p>';
+            echo '</main>';
 
             $cinemaSql = "SELECT c.nom_cinema, s.nom_salle, se.id_seance, se.heure_projection, se.langue, se.statut, se.prix
                           FROM cinema c
@@ -64,9 +63,10 @@ if (isset($_GET['id_film'])) {
                         echo 'Statut : ' . $seance['statut'] . '<br>';
                         echo 'Prix : ' . $seance['prix'] . '<br>';
                         echo '</p>';
-                        echo '<form action="reservation.php" method="post">';
+                        echo '<form action="../scripts/traitement_reservation.php" method="post">';
                         echo '<input type="hidden" name="id_film" value="' . $filmId . '">';
                         echo '<input type="hidden" name="id_seance" value="' . $seance['id_seance'] . '">';
+                        echo afficherSiegesDisponibles($pdo, $seance['id_seance']);
                         echo '<input type="submit" value="Réserver">';
                         echo '</form>';
                     }
@@ -86,6 +86,22 @@ if (isset($_GET['id_film'])) {
     echo '<p>Paramètre d\'ID de film manquant.</p>';
 }
 
+require '../include/footer.inc.php';
 ?>
 
-<?php require '../include/footer.inc.php'; ?>
+<?php
+function afficherSiegesDisponibles($pdo, $seanceId)
+{
+    $siegeSql = "SELECT id_siege FROM siege WHERE id_salle IN (SELECT id_salle FROM seance WHERE id_seance = :seanceId) AND statut = 'Libre'";
+    $siegeStmt = $pdo->prepare($siegeSql);
+    $siegeStmt->bindParam(':seanceId', $seanceId);
+    $siegeStmt->execute();
+
+    echo 'Choisissez votre siège : ';
+    echo '<select name="siege">';
+    foreach ($siegeStmt as $row) {
+        echo '<option value="' . $row['id_siege'] . '">' . $row['id_siege'] . '</option>';
+    }
+    echo '</select>';
+}
+?>

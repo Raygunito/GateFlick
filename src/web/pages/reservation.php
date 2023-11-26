@@ -1,62 +1,53 @@
 <?php
 require '../db/db_connection.php';
 
+
 $kw = 'gate flick, films, tmdb';
 $desc = 'Page de réservation sur Gate Flick';
 $title = 'Réservation | Gate Flick';
 $filePath = "../";
 require '../include/header.inc.php';
 
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../pages/connexion.php');
+    exit();
+}
+
 try {
-    // Requête pour récupérer les réservations avec les détails de la séance, de la salle, du cinéma, et du siège
-    $reservationSql =
-        "SELECT t.*, s.heure_projection, s.langue, s.statut AS seance_statut, s.prix AS seance_prix, sg.numero_siege, sl.nom_salle, sl.type_projection, sl.taille_ecran, c.nom_cinema
-                       FROM ticket t
-                       JOIN siege sg ON t.id_siege = sg.id_siege
-                       JOIN salle sl ON sg.id_salle = sl.id_salle
-                       JOIN cinema c ON sl.id_cinema = c.id_cinema
-                       JOIN seance s ON sg.id_salle = s.id_salle
-                       WHERE s.id_film = :filmId AND s.id_seance = :seanceId";
+    $userId = $_SESSION['user_id'];
 
-    $reservationStmt = $pdo->prepare($reservationSql);
+    $reservationsSql = "SELECT t.id_ticket, f.titre, c.nom_cinema, sa.nom_salle, se.heure_projection, s.numero_siege
+                    FROM acheter a
+                    JOIN ticket t ON a.id_ticket = t.id_ticket
+                    JOIN siege s ON t.id_siege = s.id_siege
+                    JOIN salle sa ON s.id_salle = sa.id_salle
+                    JOIN cinema c ON sa.id_cinema = c.id_cinema
+                    JOIN seance se ON sa.id_salle = se.id_salle
+                    JOIN film f ON se.id_film = f.id_film
+                    WHERE a.id_client = :userId";
 
-    // Ajout d'une vérification si les paramètres sont définis
-    if (isset($_POST['id_film']) && isset($_POST['id_seance'])) {
-        $reservationStmt->bindParam(':filmId', $_POST['id_film']);
-        $reservationStmt->bindParam(':seanceId', $_POST['id_seance']);
-        $reservationStmt->execute();
+    $reservationsStmt = $pdo->prepare($reservationsSql);
+    $reservationsStmt->bindParam(':userId', $userId);
+    $reservationsStmt->execute();
 
-        echo '<main>';
-        echo '<h1>Réservations</h1>';
-
-        if ($reservationStmt->rowCount() > 0) {
-            echo '<ul>';
-            foreach ($reservationStmt as $reservation) {
-                echo '<li>';
-                echo 'ID Ticket : ' . $reservation['id_ticket'] . '<br>';
-                echo 'Date de création : ' . $reservation['date_creation'] . '<br>';
-                echo 'Date d\'expiration : ' . $reservation['date_expiration'] . '<br>';
-                echo 'Statut d\'usage : ' . $reservation['statut_usage'] . '<br>';
-                echo 'Remarque : ' . $reservation['remarque'] . '<br>';
-                echo 'Numéro de siège : ' . $reservation['numero_siege'] . '<br>';
-                echo 'Heure de projection : ' . $reservation['heure_projection'] . '<br>';
-                echo 'Langue : ' . $reservation['langue'] . '<br>';
-                echo 'Statut de la séance : ' . $reservation['seance_statut'] . '<br>';
-                echo 'Prix de la séance : ' . $reservation['seance_prix'] . '<br>';
-                echo 'Nom de la salle : ' . $reservation['nom_salle'] . '<br>';
-                echo 'Type de projection : ' . $reservation['type_projection'] . '<br>';
-                echo 'Taille de l\'écran : ' . $reservation['taille_ecran'] . '<br>';
-                echo 'Nom du cinéma : ' . $reservation['nom_cinema'] . '<br>';
-                echo '</li>';
-            }
-            echo '</ul>';
-        } else {
-            echo '<p>Aucune réservation trouvée.</p>';
+    if ($reservationsStmt->rowCount() > 0) {
+        echo '<h1>Mes Réservations</h1>';
+        echo '<table border="1">';
+        echo '<tr><th>ID Ticket</th><th>Titre du Film</th><th>Cinéma</th><th>Salle</th><th>Heure de Projection</th><th>Numéro de Siège</th></tr>';
+        foreach ($reservationsStmt as $row) {
+            echo '<tr>';
+            echo '<td>' . $row['id_ticket'] . '</td>';
+            echo '<td>' . $row['titre'] . '</td>';
+            echo '<td>' . $row['nom_cinema'] . '</td>';
+            echo '<td>' . $row['nom_salle'] . '</td>';
+            echo '<td>' . $row['heure_projection'] . '</td>';
+            echo '<td>' . $row['numero_siege'] . '</td>';
+            echo '</tr>';
         }
-
-        echo '</main>';
+        echo '</table>';
     } else {
-        echo '<p>Paramètres d\'ID de film et d\'ID de séance manquants.</p>';
+        echo '<p>Aucune réservation trouvée.</p>';
     }
 } catch (PDOException $e) {
     echo 'Erreur lors de la récupération des réservations : ' . $e->getMessage();
