@@ -27,11 +27,11 @@ def handle_database(message: str, step: int, cursor, string_tab:list):
             string_tab.insert(1, result[0] if result is not None else None)
             return result
         if step == 2:
-            cursor.execute(f"UPDATE Ticket SET statut_usage = 'Used' WHERE id_ticket = '{message}'")
+            cursor.execute(f"UPDATE Ticket SET statut_usage = 'Utilisé' WHERE id_ticket = '{message}'")
             # Ne pas oublier de .commit() !!
             return True
         if step == 3:
-            cursor.execute(f"UPDATE Ticket SET statut_usage = 'Problem' WHERE id_ticket = '{message}'")
+            cursor.execute(f"UPDATE Ticket SET statut_usage = 'Problème' WHERE id_ticket = '{message}'")
             # Ne pas oublier de .commit() !!
             return True
         

@@ -42,10 +42,7 @@ function tryLogin($pdo, $filePath)
 
                         header('Location: ' . $filePath . 'index.php');
                         exit();
-                    } else {
-                        return '<p>Identifiants incorrects.</p>';
                     }
-                } else {
                     return '<p>Identifiants incorrects.</p>';
                 }
             } catch (PDOException $e) {
@@ -127,7 +124,6 @@ function tryInscription($pdo)
                     $stmt2->execute();
                     $pdo->commit();
                 }
-
                 return '<p>Inscription réussie !</p>';
             } catch (PDOException $e) {
                 $pdo->rollBack();

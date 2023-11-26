@@ -31,6 +31,11 @@ session_start();
                 <li>
                     <a href="<?= $filePath ?>pages/watchlist.php">WatchList</a>
                 </li>
+                <?php
+                    if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]) && str_contains($_SESSION["user_id"],"Emp")) {
+                        echo '<li><a href="'.$filePath.'pages/administration.php">Administration</a></li>';
+                    }
+                ?>
             </ul>
         </nav>
         <div class="searchAccount">

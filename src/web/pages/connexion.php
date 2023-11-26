@@ -1,5 +1,4 @@
 <?php
-require '../db/db_connection.php';
 
 $kw = 'gate flick, films, tmdb';
 $desc = 'Page de connexion du site Gate Flick';

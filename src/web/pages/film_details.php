@@ -28,7 +28,6 @@ if (isset($_GET['id_film'])) {
             echo '<p>Durée : ' . $filmDetails['duree'] . '</p>';
             echo '<p>Metteur en scène : ' . $filmDetails['metteur_en_scene'] . '</p>';
             echo '<p>Date de sortie : ' . $filmDetails['date_sortie'] . '</p>';
-            echo '</main>';
 
             $cinemaSql = "SELECT c.nom_cinema, s.nom_salle, se.id_seance, se.heure_projection, se.langue, se.statut, se.prix
                           FROM cinema c
