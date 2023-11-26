@@ -13,7 +13,7 @@ if (ini_get("session.use_cookies")) {
         $params["httponly"]
     );
 }
-
+session_unset();
 session_destroy();
 
 header("Location: connexion.php");

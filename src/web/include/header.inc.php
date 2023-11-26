@@ -19,18 +19,18 @@
         <nav>
             <ul>
                 <li>
-                    <a href="pages/films.php">Films</a>
+                    <a href="<?=$filePath?>pages/films.php">Films</a>
                 </li>
                 <li>
-                    <a href="pages/reservation.php">Reservation</a>
+                    <a href="<?=$filePath?>pages/reservation.php">Reservation</a>
                 </li>
                 <li>
-                    <a href="pages/watchlist.php">WatchList</a>
+                    <a href="<?=$filePath?>pages/watchlist.php">WatchList</a>
                 </li>
             </ul>
         </nav>
         <div class="searchAccount">
-            <a href="pages/connexion.php"><img src="<?=$filePath?>img/account_button.svg" alt=""></a>
+            <a href="<?=$filePath?>pages/connexion.php"><img src="<?=$filePath?>img/account_button.svg" alt=""></a>
             <a href="pages/deconnexion.php">Se déconnecter</a>
         </div>
 

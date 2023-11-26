@@ -4,7 +4,7 @@ require '../db/db_connection.php';
 $kw = 'gate flick, films, tmdb';
 $desc = 'Page de connexion du site Gate Flick';
 $title = 'Connexion | Gate Flick';
-
+$filePath = "../";
 require '../include/header.inc.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user['ID_Personne'];
                 $_SESSION['user_role'] = $user['Role'];
 
-                header('Location: ../index.php');
+                header('Location: '.$filePath.'index.php');
                 exit();
             } else {
                 echo '<p>Identifiants incorrects.</p>';
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main>
     <h1>Connexion</h1>
 
-    <form method="post" action="">
+    <form method="post" action="<?=$filePath?>pages/connexion.php" class="form-container">
         <label for="login">Login :</label>
         <input type="text" name="login" required>
 
@@ -51,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="password" name="mot_de_passe" required>
 
         <input type="submit" value="Se connecter">
+        <p>Vous n'avez pas de compte ? <a href="inscription.php">Inscrivez-vous ici</a>.</p>
     </form>
-    <p>Vous n'avez pas de compte ? <a href="inscription.php">Inscrivez-vous ici</a>.</p>
 
 </main>
 
