@@ -23,7 +23,6 @@ try {
     foreach ($stmt as $film) {
         echo '<div>';
         echo '<h2><a href="film_details.php?id_film=' . $film['id_film'] . '">' . $film['titre'] . '</a></h2>';
-        // Affichez d'autres détails du film si nécessaire
         echo '</div>';
     }
     ?>
