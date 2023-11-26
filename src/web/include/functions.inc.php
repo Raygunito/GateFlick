@@ -1,5 +1,17 @@
 <?php
+define('ATTRIBUTES_TO_EXCLUDE', ['id_personne', 'login_per', 'mot_de_passe_per', 'id_cinema', 'id_employee', 'id_client']);
 
+define('ATTRIBUTES_BEAUTIFUL', [
+    'nom_per' => 'Nom',
+    'prenom_per' => 'Prénom',
+    'email_per' => 'Email',
+    'poste' => 'Poste',
+    'niveau' => 'Niveau',
+    'level' => 'Privilège',
+    'carte_credit' => 'CB par défaut',
+    'langue_prefere' => 'Langue préféré',
+    'date_naissance' => 'Date de naissance'
+]);
 
 function replaceFromPost($key)
 {
@@ -130,10 +142,17 @@ function tryInscription($pdo)
 function showInfo($sessionUserID, $pdo)
 {
     $role = 'Client';
+    $res = '';
     if (str_contains($sessionUserID, 'Emp')) {
         $role = 'Employee';
     }
     $profile = getFullInfoUser($sessionUserID, $pdo, $role);
+    foreach ($profile as $attr => $info) {
+        if (!in_array($attr, ATTRIBUTES_TO_EXCLUDE)) {
+            $res .= "<p>" . ATTRIBUTES_BEAUTIFUL[$attr] . " : " . $info . "</p>";
+        }
+    }
+    return $res;
 }
 
 
