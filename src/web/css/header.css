@@ -1,4 +1,4 @@
-@import url("constant.css");
+@import url(constant.css);
 
 /* Desktop */
 header {
@@ -14,12 +14,20 @@ header {
 }
 
 .logo img {
-    max-width: 100%; 
+    max-width: 100%;
     height: auto;
 }
 
 .searchAccount {
     margin-right: 2vmin;
+    display: flex;
+    align-items: center;
+}
+
+.searchAccount img {
+    max-width: 30px;
+    height: auto;
+    margin-right: 10px;
 }
 
 header nav ul {
@@ -29,15 +37,33 @@ header nav ul {
     display: flex;
 }
 
+
 header nav ul li {
     margin: 0 2vmin;
+    position: relative; 
 }
 
 header nav a {
     color: var(--text-color);
     text-decoration: none;
     white-space: nowrap;
-    font-size: 1.2em; 
+    font-size: 1.2em;
+    position: relative; 
+}
+
+header nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; 
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: transparent; 
+    transition: background-color 0.3s ease; 
+}
+
+header nav a:hover::after {
+    background-color: var(--title-color); 
 }
 
 /* Responsive */
@@ -68,5 +94,10 @@ header nav a {
 
     .searchAccount {
         margin-top: 1vmin;
+    }
+
+    .searchAccount img {
+        max-width: 25px;
+        margin-right: 5px;
     }
 }

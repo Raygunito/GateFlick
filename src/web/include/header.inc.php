@@ -7,7 +7,7 @@
     <meta name='keywords' content='<?= $kw ?>' />
     <meta name='description' content='<?= $desc ?>' />
     <link rel='icon' href='img/favicon.svg' type='image/svg' />
-    <link rel="stylesheet" href="<?= $filePath?>css/main.css">
+    <link rel="stylesheet" href="<?= $filePath?>css/main.css"/>
     <title>
         <?= $title ?>
     </title>
@@ -15,7 +15,7 @@
 
 <body>
     <header>
-        <div class="logo"><img src="<?= $filePath?>img/gate-flick.svg" alt="logo GateFlick"></div>
+        <div class="logo"><a href="<?=$filePath?>index.php"><img src="<?= $filePath?>img/gate-flick.svg" alt="logo GateFlick" /></a></div>
         <nav>
             <ul>
                 <li>
@@ -30,7 +30,7 @@
             </ul>
         </nav>
         <div class="searchAccount">
-            <a href="pages/connexion.php"><button class="buttons__account | icon" type="button"></button></a>
+            <a href="pages/connexion.php"><img src="<?=$filePath?>img/account_button.svg" alt=""></a>
             <a href="pages/deconnexion.php">Se déconnecter</a>
         </div>
 

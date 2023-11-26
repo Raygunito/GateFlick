@@ -16,5 +16,5 @@ body {
     background: linear-gradient(350deg, #2d3436 0%, #0D0D0D 60%) no-repeat center center fixed;
     margin: 0;
     margin-bottom: 0;
-
+    min-height: 100vh;
 }

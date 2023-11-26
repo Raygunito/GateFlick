@@ -51,6 +51,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
             $pdo->commit();
+            if (isset($_POST['role']) && $_POST['role'] == 'client') {
+                $pdo->beginTransaction();
+                $query2 = "INSERT INTO Client (ID_Client, Level, Carte_credit, Langue_prefere, Date_naissance)
+                VALUES (:client_id, 'Normal', NULL, NULL, NULL);";
+                $stmt2 = $pdo->prepare($query2);
+                $stmt2->bindParam(":client_id", $id_personne);
+                $stmt2->execute();
+                $pdo->commit();
+            } else {
+                $pdo->beginTransaction();
+                $query2 = "INSERT INTO Employee (ID_Employee, poste,niveau,id_cinema)
+                VALUES (:id_employee, 'non_assigne', 'employee', NULL);";
+                $stmt2 = $pdo->prepare($query2);
+                $stmt2->bindParam(":id_employee", $id_personne);
+                $stmt2->execute();
+                $pdo->commit();
+            }
 
             echo '<p>Inscription réussie ! ID de la personne : ' . $id_personne . '</p>';
         } catch (PDOException $e) {
@@ -67,27 +84,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Inscription</h1>
 
     <!-- Formulaire d'inscription -->
-    <form method="post" action="">
+    <form method="post" action="inscription.php" class="form-container">
         <!-- Les champs du formulaire ici -->
-        <label for="nom">Nom :</label>
-        <input type="text" name="nom" required>
-
-        <label for="prenom">Prénom :</label>
-        <input type="text" name="prenom" required>
-
-        <label for="email">Email :</label>
-        <input type="email" name="email" required>
-
-        <label for="login">Login :</label>
-        <input type="text" name="login" required>
-
-        <label for="mot_de_passe">Mot de passe :</label>
-        <input type="password" name="mot_de_passe" required>
-
+        <label for="nom">Nom :<input id="nom" type="text" name="nom" required></label>
+        <label for="prenom">Prénom :<input id="prenom" type="text" name="prenom" required></label>
+        <label for="email">Email :<input id="email" type="email" name="email" required></label>
+        <label for="login">Login :<input id="login" type="text" name="login" required></label>
+        <label for="mot_de_passe">Mot de passe :<input id="mot_de_passe" type="password" name="mot_de_passe"
+                required></label>
         <!-- Ajoutez le champ radio pour le rôle -->
         <label>Rôle :</label>
-        <input type="radio" name="role" value="employe" required> Employé
-        <input type="radio" name="role" value="client" required> Client
+        <span>
+            <input type="radio" name="role" value="client" required> Client
+        </span>
+        <span>
+            <input type="radio" name="role" value="employe" required> Employé
+        </span>
 
         <input type="submit" value="S'inscrire">
     </form>
