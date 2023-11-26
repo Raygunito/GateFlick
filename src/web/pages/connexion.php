@@ -1,13 +1,11 @@
 <?php
+require '../db/db_connection.php';
 
 $kw = 'gate flick, films, tmdb';
 $desc = 'Page de connexion du site Gate Flick';
 $title = 'Connexion | Gate Flick';
 $filePath = "../";
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    require_once $filePath.'db/db_connection.php';
-}
-require_once $filePath.'include/header.inc.php';
+require '../include/header.inc.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['login']) && isset($_POST['mot_de_passe'])) {
@@ -25,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 session_start();
-                $_SESSION['user_id'] = $user['id_personne'];
+                $_SESSION['user_id'] = $user['ID_Personne'];
+                $_SESSION['user_role'] = $user['Role'];
 
                 header('Location: '.$filePath.'index.php');
                 exit();
@@ -45,10 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Connexion</h1>
 
     <form method="post" action="<?=$filePath?>pages/connexion.php" class="form-container">
-        <label for="login">Login :<input id="login" type="text" name="login" required></label>
-        <label for="mot_de_passe">Mot de passe :<input id="mot_de_passe" type="password" name="mot_de_passe" required></label>
+        <label for="login">Login :</label>
+        <input type="text" name="login" required>
+
+        <label for="mot_de_passe">Mot de passe :</label>
+        <input type="password" name="mot_de_passe" required>
+
         <input type="submit" value="Se connecter">
-        <p>Vous n'avez pas de compte ? <a href="<?=$filePath?>pages/inscription.php">Inscrivez-vous ici</a>.</p>
+        <p>Vous n'avez pas de compte ? <a href="inscription.php">Inscrivez-vous ici</a>.</p>
     </form>
 
 </main>

@@ -3,7 +3,7 @@ $kw = 'gate flick, films, tmdb';
 $desc = 'Home page du site Gate Flick';
 $title = 'Accueil | Gate Flick';
 $filePath = '/';
-require_once "include/header.inc.php";
+require "include/header.inc.php";
 ?>
 <main>
 
