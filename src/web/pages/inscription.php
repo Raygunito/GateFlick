@@ -1,11 +1,13 @@
 <?php
-require '../db/db_connection.php';
 
 $kw = 'gate flick, films, tmdb';
 $desc = 'Inscription page du site Gate Flick';
 $title = 'Inscription | Gate Flick';
-$filePath = '../';
-require '../include/header.inc.php';
+$filePath = "../";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once $filePath.'db/db_connection.php';
+}
+require_once $filePath.'include/header.inc.php';
 
 function generateId($role)
 {
@@ -102,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </span>
 
         <input type="submit" value="S'inscrire">
+        <p>Déjà un compte ? <a href="<?=$filePath?>pages/connexion.php">Connectez-vous ici</a>.</p>
     </form>
 </main>
 
