@@ -25,9 +25,9 @@ header {
 }
 
 .searchAccount img {
-    max-width: 30px;
+    max-width: 40px;
     height: auto;
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 header nav ul {
@@ -47,7 +47,7 @@ header nav a {
     color: var(--text-color);
     text-decoration: none;
     white-space: nowrap;
-    font-size: 1.2em;
+    font-size: 1.4em;
     position: relative; 
 }
 
@@ -87,7 +87,7 @@ header nav a:hover::after {
     }
 
     header nav li {
-        margin: 1vmin 0;
+        margin: 1vmin 0 !important;
         display: block;
         text-align: center;
     }
@@ -98,6 +98,6 @@ header nav a:hover::after {
 
     .searchAccount img {
         max-width: 25px;
-        margin-right: 5px;
+        margin: 1vmin 10px;
     }
 }

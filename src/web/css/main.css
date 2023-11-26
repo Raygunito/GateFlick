@@ -2,6 +2,7 @@
 
 main {
     margin: auto;
+    flex: 1;
 }
 
 main section {

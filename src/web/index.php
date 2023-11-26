@@ -30,9 +30,4 @@ require "include/header.inc.php";
         </div>
     </section>
 </main>
-<?php
-require 'include/footer.inc.php';
-?>
-</body>
-
-</html>
+<?php require_once 'include/footer.inc.php'; ?>

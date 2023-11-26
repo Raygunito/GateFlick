@@ -26,7 +26,7 @@ if (isset($_GET['id_film'])) {
             echo '<p>Durée : ' . $filmDetails['duree'] . '</p>';
             echo '<p>Metteur en scène : ' . $filmDetails['metteur_en_scene'] . '</p>';
             echo '<p>Date de sortie : ' . $filmDetails['date_sortie'] . '</p>';
-            echo '</main>';
+            // Requête pour récupérer les cinémas et les séances proposant ce film
             $cinemaSql = "SELECT c.nom_cinema, s.nom_salle, se.id_seance, se.heure_projection, se.langue, se.statut, se.prix
                           FROM cinema c
                           JOIN salle s ON c.id_cinema = s.id_cinema
@@ -67,11 +67,10 @@ if (isset($_GET['id_film'])) {
             } else {
                 echo '<p>Aucun cinéma trouvé proposant ce film.</p>';
             }
-
-            echo '</main>';
         } else {
             echo '<p>Aucun film trouvé avec cet ID.</p>';
         }
+        echo '</main>';
     } catch (PDOException $e) {
         echo 'Erreur lors de la récupération des détails du film : ' . $e->getMessage();
     }
@@ -81,6 +80,4 @@ if (isset($_GET['id_film'])) {
 
 ?>
 
-<?php require '../include/footer.inc.php'; ?>
-
-</html>
+<?php require_once $filePath.'include/footer.inc.php'; ?>
