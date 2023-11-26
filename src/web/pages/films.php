@@ -29,4 +29,4 @@ try {
 
 </main>
 
-<?php require_once $filePath.'include/footer.inc.php';; ?>
+<?php require_once $filePath . 'include/footer.inc.php';; ?>

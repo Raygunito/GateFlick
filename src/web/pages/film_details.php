@@ -30,7 +30,6 @@ if (isset($_GET['id_film'])) {
             echo '<p>Date de sortie : ' . $filmDetails['date_sortie'] . '</p>';
             echo '</main>';
 
-            // Requête pour récupérer les cinémas et les séances proposant ce film
             $cinemaSql = "SELECT c.nom_cinema, s.nom_salle, se.id_seance, se.heure_projection, se.langue, se.statut, se.prix
                           FROM cinema c
                           JOIN salle s ON c.id_cinema = s.id_cinema
@@ -41,13 +40,11 @@ if (isset($_GET['id_film'])) {
             $cinemaStmt->execute();
 
             if ($cinemaStmt->rowCount() > 0) {
-                // Utiliser un tableau pour organiser les séances par cinéma
                 $seancesParCinema = [];
 
                 foreach ($cinemaStmt as $row) {
                     $cinemaNom = $row['nom_cinema'];
 
-                    // Ajouter la séance à la liste des séances pour ce cinéma
                     $seancesParCinema[$cinemaNom][] = [
                         'salleNom' => $row['nom_salle'],
                         'id_seance' => $row['id_seance'],
@@ -55,11 +52,9 @@ if (isset($_GET['id_film'])) {
                         'langue' => $row['langue'],
                         'statut' => $row['statut'],
                         'prix' => $row['prix']
-                        // Ajoutez d'autres détails si nécessaire
                     ];
                 }
 
-                // Afficher les séances par cinéma
                 foreach ($seancesParCinema as $cinemaNom => $seances) {
                     echo '<h3>Cinéma ' . $cinemaNom . '</h3>';
                     foreach ($seances as $seance) {
@@ -95,5 +90,3 @@ if (isset($_GET['id_film'])) {
 ?>
 
 <?php require '../include/footer.inc.php'; ?>
-
-</html>

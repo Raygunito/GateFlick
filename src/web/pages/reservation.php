@@ -63,6 +63,3 @@ try {
 }
 
 require '../include/footer.inc.php';
-?>
-
-</html>
