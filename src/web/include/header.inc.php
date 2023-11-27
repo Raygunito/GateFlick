@@ -27,7 +27,7 @@ session_start();
                     <a href="<?= $filePath ?>pages/films.php">Films</a>
                 </li>
                 <?php
-                if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]) && str_contains($_SESSION["user_id"], "Cli")) {
+                if ((!isset($_SESSION['user_id'])) || (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]) && str_contains($_SESSION["user_id"], "Cli"))) {
                     echo '<li><a href="' . $filePath . 'pages/reservation.php">Réservation</a></li>';
                 }
                 if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]) && str_contains($_SESSION["user_id"], "Emp")) {
