@@ -43,7 +43,7 @@ CREATE TABLE salle (
     nombre_place integer NOT NULL CHECK (Nombre_place > 0),
     type_projection character varying(10) NOT NULL,
     taille_ecran double precision NOT NULL CHECK (Taille_ecran > 0),
-    id_cinema character(5),
+    id_cinema character(5) NOT NULL,
     CONSTRAINT salle_id_cinema_fkey FOREIGN KEY (id_cinema) REFERENCES cinema(id_cinema)
 );
 
@@ -51,10 +51,10 @@ CREATE TABLE seance (
     id_seance character varying(20) NOT NULL PRIMARY KEY,
     heure_projection TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     langue character varying(10) NOT NULL,
-    statut character varying(10),
+    statut character varying(10) NOT NULL,
     prix double precision NOT NULL CHECK (Prix > 0),
-    id_film character(10),
-    id_salle character varying(6),
+    id_film character(10) NOT NULL,
+    id_salle character varying(6) NOT NULL,
     CONSTRAINT seance_id_film_fkey FOREIGN KEY (id_film) REFERENCES film(id_film),
     CONSTRAINT seance_id_salle_fkey FOREIGN KEY (id_salle) REFERENCES salle(id_salle)
 );
@@ -66,7 +66,7 @@ CREATE TABLE siege (
     type character varying(10) NOT NULL,
     remarques character varying(10),
     statut character varying(10) NOT NULL,
-    id_salle character varying(6),
+    id_salle character varying(6) NOT NULL,
     CONSTRAINT siege_id_salle_fkey FOREIGN KEY (id_salle) REFERENCES salle(id_salle)
 );
 
@@ -94,10 +94,10 @@ CREATE TABLE personne (
 CREATE TABLE ticket (
     id_ticket character(12) NOT NULL PRIMARY KEY,
     date_creation DATE NOT NULL,
-    date_expiration DATE,
+    date_expiration DATE NOT NULL,
     statut_usage character varying(10) NOT NULL,
     remarque character varying(10),
-    id_siege character(7),
+    id_siege character(7) NOT NULL,
     CONSTRAINT ticket_id_siege_fkey FOREIGN KEY (id_siege) REFERENCES siege(id_siege)
 );
 
