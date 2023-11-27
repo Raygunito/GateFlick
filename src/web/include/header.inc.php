@@ -18,29 +18,24 @@ session_start();
 
 <body>
     <header>
-        <div class="logo"><a href="<?= $filePath ?>index.php"><img src="<?= $filePath ?>img/gate-flick.svg"
-                    alt="logo GateFlick" /></a></div>
+        <div class="logo"><a href="<?= $filePath ?>index.php"><img src="<?= $filePath ?>img/gate-flick.svg" alt="logo GateFlick" /></a></div>
         <nav>
             <ul>
                 <li>
                     <a href="<?= $filePath ?>pages/films.php">Films</a>
                 </li>
                 <li>
-                    <a href="<?= $filePath ?>pages/reservation.php">Reservation</a>
-                </li>
-                <li>
-                    <a href="<?= $filePath ?>pages/watchlist.php">WatchList</a>
+                    <a href="<?= $filePath ?>pages/reservation.php">Réservation</a>
                 </li>
                 <?php
-                    if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]) && str_contains($_SESSION["user_id"],"Emp")) {
-                        echo '<li><a href="'.$filePath.'pages/administration.php">Administration</a></li>';
-                    }
+                if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"]) && str_contains($_SESSION["user_id"], "Emp")) {
+                    echo '<li><a href="' . $filePath . 'pages/administration.php">Administration</a></li>';
+                }
                 ?>
             </ul>
         </nav>
         <div class="searchAccount">
-            <a href="<?= $filePath ?>pages/profil.php"><img src="<?= $filePath ?>img/account_button.svg"
-                    alt="mon compte"></a>
+            <a href="<?= $filePath ?>pages/profil.php"><img src="<?= $filePath ?>img/account_button.svg" alt="mon compte"></a>
             <?php
             if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) {
                 echo '<a href="' . $filePath . 'pages/deconnexion.php"><img src="' . $filePath . 'img/logout_button.svg" alt="se deconnecter"></a>';
