@@ -278,7 +278,7 @@ function generateAdminCurrentSeanceArticle($pdo)
                     JOIN film f ON se.id_film = f.id_film
                     JOIN salle sal ON se.id_salle = sal.id_salle
                     JOIN cinema c ON sal.id_cinema = c.id_cinema
-                WHERE se.heure_projection <= CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP <= se.heure_projection + INTERVAL '3 day'
+                WHERE se.heure_projection <= CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP <= se.heure_projection + INTERVAL '2 day'
                 GROUP BY c.nom_cinema, f.titre;";
     $stmt = $pdo->prepare($query);
     $stmt->execute();
