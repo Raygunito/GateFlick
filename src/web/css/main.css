@@ -1,4 +1,4 @@
-@import url(header.css);
+@import url("header.css");
 
 main {
     margin: auto;
@@ -23,6 +23,15 @@ main li {
     margin-bottom: 10px;
 }
 
+main section {
+    padding: 20px;
+    margin: auto; 
+    max-width: 800px;
+}
+
+#stat p:nth-child(2n+1) {
+    margin-bottom: 4vmin !important;
+}
 .form-container {
     margin: auto;
     width: 80%;
@@ -71,13 +80,15 @@ main li {
 }
 
 .card-wrapper {
+    
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
 }
 
+
 .horizontal-card {
-    width: calc(33.33% - 30px);
+    width: 33.33%;
     margin-bottom: 30px; /* Adjust the margin as needed */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
@@ -130,5 +141,8 @@ main li {
     }
     .form-container {
         width: 80%;
+    }
+    .horizontal-card {
+        width: 100%; 
     }
 }

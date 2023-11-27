@@ -163,35 +163,93 @@ function getFullInfoUser($sessionUserID, $pdo, $role)
 }
 
 
-function generateAdminTicketSection($pdo){
-    $query = "SELECT * FROM Ticket 
-            NATURAL JOIN Siege 
-            NATURAL JOIN Salle 
-            NATURAL JOIN Cinema 
-            WHERE statut_usage = 'Problème'";
+function generateAdminTicketSection($pdo)
+{
+
+    $query = "SELECT * FROM Ticket NATURAL JOIN Siege NATURAL JOIN Salle NATURAL JOIN Cinema WHERE statut_usage = 'Problème'";
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($rows as  $row) {
-        $idCom = $row["id_ticket"]; 
-        $cinema = $row["nom_cinema"];
-        generateHorizontalCard($idCom,$cinema,"Refuse.php","Accept.php");
+    if (count($rows) > 0) {
+        foreach ($rows as $row) {
+            $idCom = $row["id_ticket"];
+            $cinema = $row["nom_cinema"];
+            $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            generateHorizontalCard($idCom, $cinema, $path . '?idCom=' . $idCom . '&decline=True', $path . '?idCom=' . $idCom . '&decline=False');
+        }
+    } else {
+        echo "<p>Aucune commande avec des soucis.</p>";
     }
-
 }
 
-function generateHorizontalCard($title, $description, $linkRefuse,$linkAccept) {
+function generateHorizontalCard($title, $description, $linkRefuse, $linkAccept)
+{
     $html = '
-        <div class="horizontal-card">'."\n".'
-            <div class="card-content">'."\n".'
-                <h2 class="card-title">' . $title . '</h2>'."\n".'
-                <p class="card-description">' . $description . '</p>'."\n".'
-                <a href="' . $linkRefuse . '" class="card-link">Non utilisé</a>'."\n".'
-                <a href="' . $linkAccept . '" class="card-link">Utilisé</a>'."\n".'
-            </div>'."\n".'
-        </div>'."\n";
+        <div class="horizontal-card">' . "\n" . '
+            <div class="card-content">' . "\n" . '
+                <h3 class="card-title">' . $title . '</h3>' . "\n" . '
+                <p class="card-description">' . $description . '</p>' . "\n" . '
+                <a href="' . $linkRefuse . '" class="card-link">Non utilisé</a>' . "\n" . '
+                <a href="' . $linkAccept . '" class="card-link">Utilisé</a>' . "\n" . '
+            </div>' . "\n" . '
+        </div>' . "\n";
 
     echo $html;
+}
+
+function generateAdminStatsSection($pdo)
+{
+    generateAdminChiffreAffaireArticle($pdo);
+    generateAdminCurrentSeanceArticle($pdo);
+}
+
+function generateAdminCurrentSeanceArticle($pdo){
+    $query = "SELECT c.nom_cinema, f.titre
+                FROM seance se
+                    JOIN film f ON se.id_film = f.id_film
+                    JOIN salle sal ON se.id_salle = sal.id_salle
+                    JOIN cinema c ON sal.id_cinema = c.id_cinema
+                WHERE se.heure_projection <= CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP <= se.heure_projection + INTERVAL '3 day'
+                GROUP BY c.nom_cinema, f.titre;";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // var_dump($row);
+    echo "<article id='stat'>\n";
+    echo "<h3>Les séances en cours :</h3>\n";
+    foreach ($row as $value) {
+        $name = $value['nom_cinema'];
+        $revenu = $value['titre'];
+        echo '<p>Nom cinéma' . " : " . $name . "</p>\n";
+        echo '<p>Film en cours' . " : " . $revenu . "</p>\n";
+    }
+    echo "</article>\n";
+}
+
+function generateAdminChiffreAffaireArticle($pdo)
+{
+    $query = "SELECT 
+    c.nom_cinema,
+    SUM(a.prix_total) AS Total_Revenue
+        FROM acheter a
+        JOIN ticket t ON a.id_ticket = t.id_ticket
+        JOIN siege s ON t.id_siege = s.id_siege
+        JOIN salle sal ON s.id_salle = sal.id_salle
+        JOIN cinema c ON sal.id_cinema = c.id_cinema
+    GROUP BY c.nom_cinema ORDER BY Total_Revenue DESC;";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // var_dump($row);
+    echo "<article id='stat'>\n";
+    echo "<h3>Revenu total :</h3>\n";
+    foreach ($row as $value) {
+        $name = $value['nom_cinema'];
+        $revenu = $value['total_revenue'];
+        echo '<p>Nom cinéma' . " : " . $name . "</p>\n";
+        echo '<p>Revenu total' . " : " . $revenu . "&euro;</p>\n";
+    }
+    echo "</article>\n";
 }
 
 ?>
