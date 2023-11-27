@@ -46,7 +46,6 @@ if (isset($_GET['idCom']) && !empty($_GET['idCom']) && isset($_GET['decline']) &
         <div class="card-wrapper">
             <?php
             generateAdminTicketSection($pdo);
-            generateHorizontalCard("Titre","Desc","zer","zer");
             ?>
         </div>
     </section>

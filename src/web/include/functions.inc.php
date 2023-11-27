@@ -108,19 +108,38 @@ function tryInscription($pdo)
 
                 $pdo->commit();
                 if (isset($_POST['role']) && $_POST['role'] == 'client') {
+                    $langue = $_POST['preferredLanguage'];
+                    $birth = $_POST['birthDate'];
                     $pdo->beginTransaction();
                     $query2 = "INSERT INTO Client (ID_Client, Level, Carte_credit, Langue_prefere, Date_naissance)
-                VALUES (:client_id, 'New', NULL , 'French', NULL);";
+                VALUES (:client_id, 'New', NULL , :lang, :birth);";
                     $stmt2 = $pdo->prepare($query2);
                     $stmt2->bindParam(":client_id", $id_personne);
+                    $stmt2->bindParam(":lang", $langue);
+                    $stmt2->bindParam(":birth", $birth);
                     $stmt2->execute();
                     $pdo->commit();
                 } else {
                     $pdo->beginTransaction();
+                    $poste = $_POST['poste'];
+                    $niveau = $_POST['niveau'];
+                    $idCine = $_POST['idCinema'];
+
+                    $sql = 'SELECT * FROM cinema WHERE id_cinema = :cine';
+                    $stCine = $pdo->prepare($sql);
+                    $stCine->bindParam(":cine",$idCine);
+                    $stCine->execute();
+                    if ($stCine->rowCount() <= 0) {
+                        return "<p>L'ID Cinéma n'existe pas </p>";
+                    }
+
                     $query2 = "INSERT INTO Employee (ID_Employee, poste,niveau,id_cinema)
-                VALUES (:id_employee, 'non_assigne', 'employee', NULL);";
+                VALUES (:id_employee, :poste, :niveau, :idC);";
                     $stmt2 = $pdo->prepare($query2);
                     $stmt2->bindParam(":id_employee", $id_personne);
+                    $stmt2->bindParam(":poste", $poste);
+                    $stmt2->bindParam(":niveau", $niveau);
+                    $stmt2->bindParam(":idC", $idCine);
                     $stmt2->execute();
                     $pdo->commit();
                 }

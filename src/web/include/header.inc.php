@@ -9,11 +9,12 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name='keywords' content='<?= $kw ?>' />
     <meta name='description' content='<?= $desc ?>' />
-    <link rel='icon' href='img/favicon.svg' type='image/svg' />
+    <link rel="shortcut icon" href="<?=$filePath?>img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="<?= $filePath ?>css/main.css" />
     <title>
         <?= $title ?>
     </title>
+    <script src="<?= $filePath?>scripts/script.js" defer></script>
 </head>
 
 <body>

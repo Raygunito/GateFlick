@@ -66,7 +66,7 @@ if (isset($_GET['id_film'])) {
                         echo '<input type="hidden" name="id_film" value="' . $filmId . '">';
                         echo '<input type="hidden" name="id_seance" value="' . $seance['id_seance'] . '">';
                         echo afficherSiegesDisponibles($pdo, $seance['id_seance']);
-                        echo '<input type="submit" value="Réserver">';
+                        echo '<input type="submit" value="Réserver" class="siege">';
                         echo '</form>';
                     }
                 }
@@ -97,7 +97,7 @@ function afficherSiegesDisponibles($pdo, $seanceId)
     $siegeStmt->execute();
 
     echo 'Choisissez votre siège : ';
-    echo '<select name="siege">';
+    echo '<select name="siege" class="siege">';
     foreach ($siegeStmt as $row) {
         echo '<option value="' . $row['id_siege'] . '">' . $row['id_siege'] . '</option>';
     }

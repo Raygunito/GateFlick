@@ -80,7 +80,7 @@ main section {
 }
 
 .card-wrapper {
-    
+    min-width: 42.5vw;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -122,6 +122,17 @@ main section {
     border-radius: 3px;
 }
 
+.siege >option ,.hidden label>select, .hidden label select>option{
+    color: black;
+
+}
+.siege {
+    color: black;
+}
+
+.hidden {
+    display: none;
+}
 
 /* Responsive */
 @media screen and (max-width: 600px) {
