@@ -1,8 +1,8 @@
 <?php
 
 $kw = 'gate flick, films, tmdb';
-$desc = 'Inscription page du site Gate Flick';
-$title = 'Inscription | Gate Flick';
+$desc = 'Profil du client ou de l\'employé ';
+$title = 'Profil | Gate Flick';
 $filePath = "../";
 require_once $filePath.'include/header.inc.php';
 require_once $filePath."include/functions.inc.php";
