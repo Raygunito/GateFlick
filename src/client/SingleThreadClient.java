@@ -26,7 +26,8 @@ public class SingleThreadClient {
             RECEIVED_PATTERN };
     private static final Pattern VALID_PATTERN = Pattern.compile("^VALID\\s.*$");
     private static final Pattern REJECT_PATTERN = Pattern.compile("^REJECT\\s.*$");
-    private static final String[] OUTPUT_CLIENT = { "QR Code non reconnu", "Portique inconnu", "QR Code déjà utilisé",
+    private static final Pattern WARN_PATTERN = Pattern.compile("^WARN\\s.*$");
+    private static final String[] OUTPUT_CLIENT = { "QR Code non reconnu", "Portique inconnu", "QR Code déjà utilisé ou mauvaise salle",
             "Timeout, veuillez voir l'accueil" };
 
     public void start() {
@@ -81,6 +82,17 @@ public class SingleThreadClient {
                     if (VALID_PATTERN.matcher(response).matches()) {
                         step++;
                     } else {
+                        if (WARN_PATTERN.matcher(response).matches()){
+                            if (step == 1) {
+                                System.out.println("Attention vous êtes devant la mauvaise salle.");
+                                logger.warn("Client Ticket and Portique input are not related");
+                            }
+                            if (step == 2){
+                                System.out.println(("Attention le ticket est déjà utilisé."));
+                                logger.warn("Ticket already used");
+                            }
+                            break;
+                        }
                         if (REJECT_PATTERN.matcher(response).matches()) {
                             System.out.println(OUTPUT_CLIENT[step] + "- Restarting to the beginning");
                             step = 0;

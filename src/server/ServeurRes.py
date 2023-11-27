@@ -16,7 +16,6 @@ log = Logger.startLogger("MainServer")
 
 # Réponse qui sera basé sur le schéma applicatif du rapport
 def decodeMessage(message: str, step: int, array : list,db_connection) -> str:
-    print(step)
     # J'ai eu droit a la spéciale Java avec les caractères spéciaux cachés
     clean_message = Utility.cleanMessage(message)
     if step == 4:
@@ -111,7 +110,6 @@ def handle_client(client_socket: socket.socket, client_address: Tuple[str, int])
         kickTimeOut = True
 
         if ((array_string[0]!=None) and (array_string[1]!=None)):
-            print("Je vais changer le ticket car Timeout")
             decodeMessage('',step+1,array_string,db_connection)
             
     except (socket.error, ConnectionResetError) as e:
