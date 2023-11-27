@@ -1,8 +1,8 @@
 <?php
 
 $kw = 'gate flick, films, tmdb';
-$desc = 'Page de connexion du site Gate Flick';
-$title = 'Connexion | Gate Flick';
+$desc = 'Administration de Gate Flick';
+$title = 'Admin | Gate Flick';
 $filePath = "../";
 require_once $filePath . 'db/db_connection.php';
 require_once $filePath . "include/functions.inc.php";
@@ -55,8 +55,7 @@ if (isset($_GET['idCom']) && !empty($_GET['idCom']) && isset($_GET['decline']) &
             <?php
             generateAdminStatsSection($pdo);
             ?>
-        </div>
-
+        </div>        
     </section>
 </main>
 

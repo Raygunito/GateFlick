@@ -54,6 +54,33 @@ function tryLogin($pdo, $filePath)
     }
 }
 
+function afficherSiegesDisponibles($pdo, $seanceId)
+{
+    $siegeSql = "SELECT id_siege FROM siege WHERE id_salle IN (SELECT id_salle FROM seance WHERE id_seance = :seanceId) AND statut = 'Libre'";
+    $siegeStmt = $pdo->prepare($siegeSql);
+    $siegeStmt->bindParam(':seanceId', $seanceId);
+    $siegeStmt->execute();
+
+    echo 'Choisissez votre siège : ';
+    echo '<select name="siege" class="siege">';
+    foreach ($siegeStmt as $row) {
+        echo '<option value="' . $row['id_siege'] . '">' . $row['id_siege'] . '</option>';
+    }
+    echo '</select>';
+}
+
+
+function printFilmDetails($filmDetails)
+{
+    echo "<section>";
+    echo '<h2>' . $filmDetails['titre'] . "</h2>\n";
+    echo '<p>Nation : ' . $filmDetails['nation'] . "</p>\n";
+    echo '<p>Durée : ' . $filmDetails['duree'] . "</p>\n";
+    echo '<p>Metteur en scène : ' . $filmDetails['metteur_en_scene'] . "</p>\n";
+    echo '<p>Date de sortie : ' . $filmDetails['date_sortie'] . "</p>\n";
+    echo "</section>\n";
+}
+
 function generateId($role)
 {
     $prefix = ($role === 'client') ? 'Cli' : 'Emp';
@@ -127,7 +154,7 @@ function tryInscription($pdo)
 
                     $sql = 'SELECT * FROM cinema WHERE id_cinema = :cine';
                     $stCine = $pdo->prepare($sql);
-                    $stCine->bindParam(":cine",$idCine);
+                    $stCine->bindParam(":cine", $idCine);
                     $stCine->execute();
                     if ($stCine->rowCount() <= 0) {
                         return "<p>L'ID Cinéma n'existe pas </p>";
@@ -167,6 +194,10 @@ function showInfo($sessionUserID, $pdo)
             $res .= "<p>" . ATTRIBUTES_BEAUTIFUL[$attr] . " : " . $info . "</p>";
         }
     }
+    if (str_contains($sessionUserID, 'Cli')) {
+        $res .= getSpecialClientInfo($pdo, $profile['id_client']);
+
+    }
     return $res;
 }
 
@@ -180,7 +211,24 @@ function getFullInfoUser($sessionUserID, $pdo, $role)
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row;
 }
-
+function getSpecialClientInfo($pdo, $idClient)
+{
+    $query = 'SELECT SUM(a.prix_total) AS Total_Spent
+            FROM acheter a
+            JOIN ticket t ON a.id_ticket = t.id_ticket
+            JOIN siege s ON t.id_siege = s.id_siege
+            JOIN salle sal ON s.id_salle = sal.id_salle
+            JOIN cinema c ON sal.id_cinema = c.id_cinema
+            WHERE a.id_client = :idClient';
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':idClient', $idClient);
+    $stmt->execute();
+    if ($stmt->rowCount() > 0) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return "<p>Montant dépensé chez GateFlick : " . $row['total_spent'] . "&euro;</p>\n";
+    }
+    return "<p>Erreur lors de la récupération du montant dépensé chez GateFlick</p>";
+}
 
 function generateAdminTicketSection($pdo)
 {
@@ -220,9 +268,11 @@ function generateAdminStatsSection($pdo)
 {
     generateAdminChiffreAffaireArticle($pdo);
     generateAdminCurrentSeanceArticle($pdo);
+    generateAdminPlusFideleClientArticle($pdo);
 }
 
-function generateAdminCurrentSeanceArticle($pdo){
+function generateAdminCurrentSeanceArticle($pdo)
+{
     $query = "SELECT c.nom_cinema, f.titre
                 FROM seance se
                     JOIN film f ON se.id_film = f.id_film
@@ -270,5 +320,36 @@ function generateAdminChiffreAffaireArticle($pdo)
     }
     echo "</article>\n";
 }
+
+function generateAdminPlusFideleClientArticle($pdo)
+{
+    $query = "SELECT p.*,c.*, SUM(a.prix_total) AS total_depense
+                FROM Client c
+                JOIN Personne p ON c.ID_Client = p.ID_personne
+                JOIN Acheter a ON c.ID_Client = a.ID_Client
+                GROUP BY c.ID_Client,p.id_personne
+                ORDER BY total_depense DESC";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $i = 0;
+    echo "<article id='stat'>\n";
+    echo "<h3>Top 5 des clients fidèles :</h3>\n";
+    foreach ($row as $value) {
+        if ($i < 5) {
+            $name = $value['nom_per'];
+            $surname = $value['prenom_per'];
+            $revenu = $value['total_depense'];
+            echo '<p>Nom et prénom' . " : " . $name . " " . $surname . "</p>\n";
+            echo '<p>Total dépensé' . " : " . $revenu . "&euro;</p>\n";
+        } else {
+            break;
+        }
+        $i++;
+    }
+    echo "</article>\n";
+
+}
+
 
 ?>

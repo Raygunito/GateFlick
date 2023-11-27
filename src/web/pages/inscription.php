@@ -24,7 +24,7 @@ require_once $filePath . 'include/functions.inc.php';
         <label for="login">Login :<input id="login" type="text" name="login" required></label>
         <label for="mot_de_passe">Mot de passe :<input id="mot_de_passe" type="password" name="mot_de_passe"
                 required></label>
-        <!-- Ajoutez le champ radio pour le rôle -->
+
         <label>Rôle :</label>
         <span>
             <input type="radio" name="role" value="client" required onclick="showClientFields()"> Client
@@ -33,15 +33,11 @@ require_once $filePath . 'include/functions.inc.php';
             <input type="radio" name="role" value="employe" required onclick="showEmployeeFields()"> Employé
         </span>
         <div id="employeeFields" class="hidden">
-            <label for="poste">Poste:<input id="poste" type="text"
-                    name="poste"></label>
-            <label for="niveau">Niveau:<input id="niveau" type="text"
-                    name="niveau"></label>
-            <label for="idCinema">Code cinéma:<input id="idCinema" type="text"
-                    name="idCinema"></label>
+            <label for="poste">Poste:<input id="poste" type="text" name="poste"></label>
+            <label for="niveau">Niveau:<input id="niveau" type="text" name="niveau"></label>
+            <label for="idCinema">Code cinéma:<input id="idCinema" type="text" name="idCinema"></label>
         </div>
 
-        <!-- Additional fields for Client -->
         <div id="clientFields" class="hidden">
             <label for="preferredLanguage">Langue préféré:
                 <select name="preferredLanguage" id="preferredLanguage">
