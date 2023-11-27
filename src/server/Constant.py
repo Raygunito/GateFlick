@@ -9,6 +9,8 @@ STEP_PATTERNS = [
     r'RECEIVED'
 ]
 
+WARNING_NO_RELATION_T_P = "WARN Ticket and Portique are not related"
+WARNING_TICKET_USED = "WARN Ticket already used"
 STEP_RESPONSES = [
     "VALID Ticket found",
     "VALID Serial found",

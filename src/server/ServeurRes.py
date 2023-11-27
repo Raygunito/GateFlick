@@ -15,13 +15,21 @@ log = Logger.startLogger("MainServer")
 
 
 # Réponse qui sera basé sur le schéma applicatif du rapport
-def decodeMessage(message: str, step: int, array : list) -> str:
+def decodeMessage(message: str, step: int, array : list,db_connection) -> str:
+    print(step)
     # J'ai eu droit a la spéciale Java avec les caractères spéciaux cachés
     clean_message = Utility.cleanMessage(message)
+    if step == 4:
+        Database.handle_database("",step,cursor,array,db_connection)
+        return
     #Pré traitement de l'information, refuser tous les messages qui ne suivent pas le regex
     if re.search(Constant.STEP_PATTERNS[step], clean_message):
-        requestResponse = Database.handle_database(clean_message, step, cursor, array)
+        requestResponse = Database.handle_database(clean_message, step, cursor, array,db_connection)
         if not requestResponse:
+            if step == 1:
+                return Constant.WARNING_NO_RELATION_T_P
+            if step == 2:
+                return Constant.WARNING_TICKET_USED
             return Constant.STEP_FAILURES[step]
              
         return Constant.STEP_RESPONSES[step]
@@ -58,16 +66,30 @@ def handle_client(client_socket: socket.socket, client_address: Tuple[str, int])
                 client_socket.close()
                 return
             log.debug(f"Received data from client: {Utility.cleanMessage(request)}")
+
+
+
             # Processus et préparation SQL
             # Communication avec la base donnée très important comme ligne
-            response = decodeMessage(request, step, array_string)
+            response = decodeMessage(request, step, array_string,db_connection)
+
+            if (step == 4):
+                break
 
             if (response == Constant.STEP_RESPONSES[step]):
                 step += 1
             else:
-                response = response + "- Resetting to Step 1"
-                step = 0
+                if response == Constant.WARNING_NO_RELATION_T_P:
+                    log.error("Client input for ticket and portique are not related in DB")
+                    break
+                elif response == Constant.WARNING_TICKET_USED:
+                    log.error("Ticket given by Client is already used")
+                    break
+                else:
+                    response = response + "- Resetting to Step 1"
+                    step = 0
             response = response + "\n"
+            
 
             try:
                 client_socket.send(response.encode('utf-8'))
@@ -90,7 +112,7 @@ def handle_client(client_socket: socket.socket, client_address: Tuple[str, int])
 
         if ((array_string[0]!=None) and (array_string[1]!=None)):
             print("Je vais changer le ticket car Timeout")
-            decodeMessage('',step,array_string)
+            decodeMessage('',step+1,array_string,db_connection)
             
     except (socket.error, ConnectionResetError) as e:
         log.error(f"Socket error for {client_address}: {e}")
