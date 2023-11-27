@@ -161,4 +161,37 @@ function getFullInfoUser($sessionUserID, $pdo, $role)
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row;
 }
+
+
+function generateAdminTicketSection($pdo){
+    $query = "SELECT * FROM Ticket 
+            NATURAL JOIN Siege 
+            NATURAL JOIN Salle 
+            NATURAL JOIN Cinema 
+            WHERE statut_usage = 'Problème'";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($rows as  $row) {
+        $idCom = $row["id_ticket"]; 
+        $cinema = $row["nom_cinema"];
+        generateHorizontalCard($idCom,$cinema,"Refuse.php","Accept.php");
+    }
+
+}
+
+function generateHorizontalCard($title, $description, $linkRefuse,$linkAccept) {
+    $html = '
+        <div class="horizontal-card">'."\n".'
+            <div class="card-content">'."\n".'
+                <h2 class="card-title">' . $title . '</h2>'."\n".'
+                <p class="card-description">' . $description . '</p>'."\n".'
+                <a href="' . $linkRefuse . '" class="card-link">Non utilisé</a>'."\n".'
+                <a href="' . $linkAccept . '" class="card-link">Utilisé</a>'."\n".'
+            </div>'."\n".'
+        </div>'."\n";
+
+    echo $html;
+}
+
 ?>

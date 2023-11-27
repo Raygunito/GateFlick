@@ -70,6 +70,48 @@ main li {
     font-weight: bold;
 }
 
+.card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.horizontal-card {
+    width: calc(33.33% - 30px);
+    margin-bottom: 30px; /* Adjust the margin as needed */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.card-image {
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
+.card-content {
+    flex-grow: 1;
+}
+
+.card-title {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.card-description {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.card-link {
+    text-decoration: none;
+    color: #3498db;
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+}
+
+
 /* Responsive */
 @media screen and (max-width: 600px) {
     h1 {

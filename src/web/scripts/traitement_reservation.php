@@ -56,10 +56,25 @@ try {
                 $insertTicketStmt->bindParam(':remarque', $remarque);
                 $insertTicketStmt->bindParam(':siege', $siege);
                 $insertTicketStmt->execute();
+
                 $updateSiegeSql = "UPDATE siege SET statut = 'Occupé' WHERE id_siege = :siege";
                 $updateSiegeStmt = $pdo->prepare($updateSiegeSql);
                 $updateSiegeStmt->bindParam(':siege', $siege);
                 $updateSiegeStmt->execute();
+
+                $sqlGetPrice = "SELECT prix FROM seance WHERE id_seance = :id";
+                $getprice = $pdo->prepare($sqlGetPrice);
+                $getprice->bindParam(":id", $idSeance);
+                $getprice->execute();
+                $rowPrice = $getprice->fetch(PDO::FETCH_ASSOC);
+
+                $sqlAddToClient = "INSERT INTO Acheter (id_ticket, id_client, nombre_billet,prix_total) VALUES
+                (:idTicket,:idClient,1,:prix_total)";
+                $stmtAcheter = $pdo->prepare($sqlAddToClient);
+                $stmtAcheter->bindParam(":idTicket", $idTicket);
+                $stmtAcheter->bindParam(":idClient", $_SESSION['user_id']);
+                $stmtAcheter->bindParam(':prix_total', $rowPrice['prix']);
+                $stmtAcheter->execute();
 
                 $pdo->commit();
 
