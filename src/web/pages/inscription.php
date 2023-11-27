@@ -22,8 +22,7 @@ require_once $filePath . 'include/functions.inc.php';
         <label for="prenom">Prénom :<input id="prenom" type="text" name="prenom" required></label>
         <label for="email">Email :<input id="email" type="email" name="email" required></label>
         <label for="login">Login :<input id="login" type="text" name="login" required></label>
-        <label for="mot_de_passe">Mot de passe :<input id="mot_de_passe" type="password" name="mot_de_passe"
-                required></label>
+        <label for="mot_de_passe">Mot de passe :<input id="mot_de_passe" type="password" name="mot_de_passe" required></label>
         <!-- Ajoutez le champ radio pour le rôle -->
         <label>Rôle :</label>
         <span>
@@ -34,9 +33,13 @@ require_once $filePath . 'include/functions.inc.php';
         </span>
 
         <input type="submit" value="S'inscrire">
-        <?= tryInscription($pdo)?>
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo tryInscription($pdo);
+        }
+        ?>
         <p>Déjà un compte ? <a href="<?= $filePath ?>pages/connexion.php">Connectez-vous ici</a>.</p>
     </form>
 </main>
 
-<?php require_once $filePath.'include/footer.inc.php'; ?>
+<?php require_once $filePath . 'include/footer.inc.php'; ?>
