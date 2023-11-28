@@ -8,6 +8,16 @@ require_once $filePath . 'db/db_connection.php';
 require_once $filePath . "include/functions.inc.php";
 require_once $filePath . 'include/header.inc.php';
 
+if ((!isset($_SESSION['user_id']))) {
+    header('Location: ../pages/connexion.php');
+    exit();
+}
+
+if ((isset($_SESSION['user_id']))&&(!empty($_SESSION['user_id']))&&(!str_contains($_SESSION['user_id'],"Emp"))) {
+    header('Location: ../index.php');
+    exit();
+}
+
 if (isset($_GET['idCom']) && !empty($_GET['idCom']) && isset($_GET['decline']) && !empty($_GET['decline'])) {
     $pdo->beginTransaction();
     $getCom = "SELECT * FROM ticket WHERE id_ticket = :id ";
