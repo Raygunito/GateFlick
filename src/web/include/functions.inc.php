@@ -204,7 +204,14 @@ function showInfo($sessionUserID, $pdo)
 
 function getFullInfoUser($sessionUserID, $pdo, $role)
 {
-    $query = 'SELECT * FROM Personne NATURAL JOIN ' . $role . ' WHERE id_personne = :id';
+    if ($role == "Employee"){
+        $join = "e.id_employee";
+        $on = "e";
+    }else{
+        $join = "c.id_client";
+        $on = "c";
+    }
+    $query = 'SELECT * FROM Personne p JOIN ' . $role ." ". $on.' ON p.id_personne = '. $join.' WHERE id_personne = :id';
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':id', $sessionUserID);
     $stmt->execute();
