@@ -80,9 +80,11 @@ def handle_client(client_socket: socket.socket, client_address: Tuple[str, int])
             else:
                 if response == Constant.WARNING_NO_RELATION_T_P:
                     log.error("Client input for ticket and portique are not related in DB")
+                    client_socket.send(response.encode('utf-8'))
                     break
                 elif response == Constant.WARNING_TICKET_USED:
                     log.error("Ticket given by Client is already used")
+                    client_socket.send(response.encode('utf-8'))
                     break
                 else:
                     response = response + "- Resetting to Step 1"
@@ -101,6 +103,7 @@ def handle_client(client_socket: socket.socket, client_address: Tuple[str, int])
                 break
     except socket.timeout:
         log.warning(f"Timeout for {client_address}. Closing the connection.")
+        print(f"Timeout for {client_address}. Closing the connection.")
         timeout_message = "TIMEOUT Connection closed due to timeout."
         try:
             client_socket.send(timeout_message.encode('utf-8'))
@@ -114,11 +117,14 @@ def handle_client(client_socket: socket.socket, client_address: Tuple[str, int])
             
     except (socket.error, ConnectionResetError) as e:
         log.error(f"Socket error for {client_address}: {e}")
+        print(f"Socket error for {client_address}: {e}")
     finally:
         if kickTimeOut:
             log.info(f"{client_address} has disconnected due to timeout.")
+            print(f"{client_address} has disconnected due to timeout.")
         else:
             log.info(f"{client_address} has disconnected.")
+            print(f"{client_address} has disconnected.")
         try:
             client_socket.close()
         except socket.error as e:
@@ -146,6 +152,7 @@ while not success:
 while True:
     client_socket, client_address = server_socket.accept()
     log.info(f"Accepted connection from {client_address}")
+    print(f"Accepted connection from {client_address}")
     handle_client(client_socket, client_address)
     # Pour activer le multiclient on utilisera des threads
     # client_thread = threading.Thread(target=handle_client, args=(client_socket,))

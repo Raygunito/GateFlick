@@ -232,7 +232,12 @@ function getSpecialClientInfo($pdo, $idClient)
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return "<p>Montant dépensé chez GateFlick : " . $row['total_spent'] . "&euro;</p>\n";
+        if ($row['total_spent'] <= 0){
+            $amount = 0;
+        }else{
+            $amount = $row['total_spent'];
+        }
+        return "<p>Montant dépensé chez GateFlick : " . $amount . "&euro;</p>\n";
     }
     return "<p>Erreur lors de la récupération du montant dépensé chez GateFlick</p>";
 }

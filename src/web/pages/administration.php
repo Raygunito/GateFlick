@@ -27,7 +27,7 @@ if (isset($_GET['idCom']) && !empty($_GET['idCom']) && isset($_GET['decline']) &
     $pdo->commit();
     if ($st->rowCount() > 0) {
         $resCom = $st->fetch(PDO::FETCH_ASSOC);
-        if ($_GET['decline'] == "False" && $resCom["statut_usage"] != "Utilisé") {
+        if ($_GET['decline'] == "True" && $resCom["statut_usage"] != "Utilisé") {
             $pdo->beginTransaction();
             $declineSQL = "UPDATE ticket SET statut_usage = 'En attente' WHERE id_ticket = :id";
             $stdecline = $pdo->prepare($declineSQL);
@@ -35,7 +35,7 @@ if (isset($_GET['idCom']) && !empty($_GET['idCom']) && isset($_GET['decline']) &
             $stdecline->execute();
             $pdo->commit();
         } else {
-            if ($_GET['decline'] == "True") {
+            if ($_GET['decline'] == "False") {
                 $pdo->beginTransaction();
                 $declineSQL = "UPDATE ticket SET statut_usage = 'Utilisé' WHERE id_ticket = :id";
                 $stdecline = $pdo->prepare($declineSQL);
