@@ -95,6 +95,7 @@ public class SingleThreadClient {
                         }
                         if (REJECT_PATTERN.matcher(response).matches()) {
                             System.out.println(OUTPUT_CLIENT[step] + "- Restarting to the beginning");
+                            msgSent="";
                             step = 0;
                         }
                     }
